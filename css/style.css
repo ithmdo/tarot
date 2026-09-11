@@ -283,482 +283,18 @@ body {
 }
 
 @media screen and (max-width: 768px) {
-    .audio-toggle-btn {
-        bottom: 1.5rem;
-        left: 1rem;
-        padding: 0.6rem 1rem;
-        font-size: 0.85rem;
+    .hero {
+        min-height: auto;
+        padding-top: calc(var(--nav-height) + 1.5rem);
+        padding-bottom: 3rem;
     }
-}
-
-/* ==========================================================================
-   Moon Phase Indicator
-   ========================================================================== */
-.moon-phase {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-right: 1rem;
-    opacity: 0.8;
-    transition: opacity 0.3s;
-    cursor: default;
-}
-
-.moon-phase:hover {
-    opacity: 1;
-}
-
-.moon-svg {
-    width: 20px;
-    height: 20px;
-    filter: drop-shadow(0 0 3px rgba(244, 240, 230, 0.3));
-}
-
-.moon-label {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    display: none;
-}
-
-@media screen and (min-width: 1024px) {
-    .moon-label {
-        display: inline;
+    .hero-container {
+        gap: 2rem;
     }
-}
-
-/* ==========================================================================
-   Gyroscope / Tilt Effect on Cards
-   ========================================================================== */
-[data-gyro] {
-    transform-style: preserve-3d;
-    will-change: transform;
-}
-
-[data-gyro] .card-border {
-    transition: opacity 0.5s ease, box-shadow 0.5s ease;
-}
-
-/* Glare overlay for light reflection effect */
-[data-gyro]::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
-    background: linear-gradient(
-        105deg,
-        transparent 40%,
-        rgba(212, 175, 55, 0.03) 45%,
-        rgba(212, 175, 55, 0.08) 50%,
-        rgba(212, 175, 55, 0.03) 55%,
-        transparent 60%
-    );
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    z-index: 5;
-}
-
-[data-gyro].gyro-active::after {
-    opacity: 1;
-}
-
-::selection {
-    background: var(--gold-dark);
-    color: var(--bg-main);
-}
-
-a {
-    color: inherit;
-    text-decoration: none;
-    transition: color 0.3s var(--ease-lux);
-}
-
-ul {
-    list-style: none;
-}
-
-img, svg {
-    max-width: 100%;
-    display: block;
-}
-
-/* ==========================================================================
-   Typography
-   ========================================================================== */
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
-    font-weight: 600;
-    line-height: 1.3;
-    color: var(--text-primary);
-}
-
-.brand-logo, .footer-logo {
-    font-family: var(--font-brand);
-    font-style: italic;
-    font-weight: 600;
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    color: var(--gold-primary);
-    letter-spacing: 0.5px;
-}
-
-p {
-    color: var(--text-secondary);
-}
-
-/* ==========================================================================
-   Layout & Utility
-   ========================================================================== */
-.container {
-    width: 100%;
-    max-width: var(--container-max);
-    margin: 0 auto;
-    padding: 0 var(--container-padding);
-}
-
-.section-padding {
-    padding: clamp(4rem, 10vw, 8rem) 0;
-}
-
-.text-center {
-    text-align: center;
-}
-
-.mt-4 {
-    margin-top: 2rem;
-}
-
-/* ==========================================================================
-   Background Atmosphere
-   ========================================================================== */
-.atmosphere-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: var(--z-back);
-    pointer-events: none;
-    background: radial-gradient(circle at 50% 0%, var(--accent-indigo) 0%, transparent 60%),
-                radial-gradient(circle at 0% 100%, var(--accent-violet) 0%, transparent 50%);
-    opacity: 0.6;
-}
-
-/* ==========================================================================
-   Buttons
-   ========================================================================== */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.75rem 1.5rem;
-    font-family: var(--font-heading);
-    font-weight: 600;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.4s var(--ease-lux);
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid transparent;
-}
-
-.btn-large {
-    padding: 1rem 2rem;
-    font-size: 1.125rem;
-}
-
-.btn-block {
-    display: flex;
-    width: 100%;
-}
-
-.btn-primary {
-    background-color: var(--gold-dark);
-    color: var(--bg-main);
-    border-color: var(--gold-primary);
-}
-
-.btn-primary:hover, .btn-primary:focus {
-    background-color: var(--gold-light);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
-}
-
-.btn-primary:active {
-    transform: translateY(0);
-}
-
-.btn-outline {
-    background-color: transparent;
-    color: var(--gold-primary);
-    border-color: var(--gold-dark);
-}
-
-.btn-outline:hover, .btn-outline:focus {
-    background-color: rgba(212, 175, 55, 0.1);
-    border-color: var(--gold-light);
-    color: var(--gold-light);
-}
-
-/* ==========================================================================
-   Navigation
-   ========================================================================== */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: var(--nav-height);
-    background: rgba(6, 5, 10, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    z-index: var(--z-nav);
-    transition: all 0.4s var(--ease-lux);
-}
-
-.navbar.scrolled {
-    height: 70px;
-    background: rgba(10, 8, 16, 0.6);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.nav-container {
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-links {
-    display: none;
-    gap: 2.5rem;
-}
-
-.nav-link {
-    font-family: var(--font-heading);
-    font-size: 1.05rem;
-    position: relative;
-    padding: 0.5rem 0;
-}
-
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    right: 0; /* RTL */
-    width: 0;
-    height: 1px;
-    background-color: var(--gold-primary);
-    transition: width 0.3s var(--ease-lux);
-}
-
-.nav-link:hover::after, .nav-link.active::after {
-    width: 100%;
-}
-
-.nav-link:hover {
-    color: var(--gold-light);
-}
-
-.nav-actions {
-    display: none;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-.social-link {
-    font-family: var(--font-heading);
-    font-size: 1rem;
-    color: var(--text-secondary);
-    letter-spacing: 0.5px;
-    direction: ltr; /* keep username ltr */
-    display: inline-block;
-}
-
-.social-link:hover {
-    color: var(--gold-primary);
-}
-
-.mobile-toggle {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 30px;
-    height: 20px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    z-index: calc(var(--z-menu) + 1);
-}
-
-.mobile-toggle .bar {
-    width: 100%;
-    height: 2px;
-    background-color: var(--gold-primary);
-    transition: all 0.3s var(--ease-lux);
-    transform-origin: right;
-}
-
-.mobile-toggle.active .bar:nth-child(1) {
-    transform: rotate(-45deg) translate(-2px, 2px);
-}
-
-.mobile-toggle.active .bar:nth-child(2) {
-    opacity: 0;
-}
-
-.mobile-toggle.active .bar:nth-child(3) {
-    transform: rotate(45deg) translate(-2px, -2px);
-}
-
-/* Mobile Menu */
-.mobile-menu {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 100%;
-    height: 100vh;
-    background: var(--bg-main);
-    z-index: var(--z-menu);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 2rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s var(--ease-lux);
-    backdrop-filter: blur(20px);
-}
-
-.mobile-menu.active {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.mobile-menu-inner {
-    transform: translateY(20px);
-    transition: transform 0.4s var(--ease-lux);
-}
-
-.mobile-menu.active .mobile-menu-inner {
-    transform: translateY(0);
-}
-
-.mobile-nav-links {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    margin-bottom: 3rem;
-}
-
-.mobile-link {
-    font-family: var(--font-heading);
-    font-size: 2rem;
-    font-weight: 500;
-    display: block;
-}
-
-.mobile-nav-footer {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: flex-start;
-}
-
-.mobile-social {
-    font-family: var(--font-heading);
-    font-size: 1.25rem;
-    direction: ltr;
-    color: var(--gold-primary);
-}
-
-/* ==========================================================================
-   Hero Section
-   ========================================================================== */
-.hero {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    padding-top: calc(var(--nav-height) + 2rem);
-    padding-bottom: 3rem;
-    position: relative;
-}
-
-.hero-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 4rem;
-    align-items: center;
-}
-
-.hero-title {
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    margin-bottom: 1.5rem;
-    color: var(--text-primary);
-}
-
-.hero-subtitle {
-    font-size: clamp(1.1rem, 2vw, 1.25rem);
-    margin-bottom: 2.5rem;
-    max-width: 500px;
-}
-
-.hero-ctas {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-/* Hero Visual - Tarot Cards */
-.hero-visual {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 400px;
-}
-
-/* Daily Interactive Tarot Card */
-.daily-tarot-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-.daily-tarot-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-family: var(--font-brand);
-    font-size: 1.2rem;
-    color: var(--gold-primary);
-    text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
-}
-
-.sparkle-icon {
-    font-size: 1.5rem;
-    animation: sparkle 2s infinite alternate;
-}
-
-@keyframes sparkle {
-    0% { opacity: 0.4; transform: scale(0.8); }
-    100% { opacity: 1; transform: scale(1.2); text-shadow: 0 0 15px var(--gold-primary); }
-}
-
 .tarot-3d-wrapper {
     perspective: 1200px;
-    width: 260px;
-    height: 420px;
+    width: 200px;
+    height: 320px;
     cursor: pointer;
 }
 
@@ -1103,8 +639,10 @@ p {
 .daily-reading-container {
     width: 100%;
     max-width: 500px;
-    max-height: 280px;
+    height: auto;
+    max-height: 350px;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     padding: 1.5rem;
     background: rgba(17, 8, 31, 0.7);
     backdrop-filter: blur(15px);
@@ -1120,20 +658,9 @@ p {
     box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(212,175,55,0.05);
 }
 
-/* Custom Scrollbar for the reading container */
-.daily-reading-container::-webkit-scrollbar {
-    width: 6px;
-}
-.daily-reading-container::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-}
-.daily-reading-container::-webkit-scrollbar-thumb {
-    background: rgba(212, 175, 55, 0.4);
-    border-radius: 10px;
-}
-.daily-reading-container::-webkit-scrollbar-thumb:hover {
-    background: rgba(212, 175, 55, 0.8);
+#daily-reading-text {
+    margin-bottom: 0;
+    line-height: 1.8;
 }
 
 .reading-title {
@@ -1141,9 +668,11 @@ p {
     color: var(--gold-primary);
     font-family: var(--font-brand);
     font-size: 1.5rem;
+    margin-top: 0;
     margin-bottom: 1rem;
     letter-spacing: 1px;
     text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+    line-height: 1.4;
 }
 
 .daily-reading-container.visible {
@@ -1152,14 +681,22 @@ p {
 }
 
 @media screen and (max-width: 768px) {
-    .tarot-3d-wrapper {
-        width: 220px;
-        height: 360px;
+    .hero {
+        min-height: auto;
+        padding-top: calc(var(--nav-height) + 1.5rem);
+        padding-bottom: 3rem;
+    }
+    .hero-container {
+        gap: 2rem;
+    }
+.tarot-3d-wrapper {
+        width: 160px;
+        height: 260px;
     }
     .daily-reading-container {
-        padding: 1rem;
+        padding: 1.2rem;
         font-size: 1rem;
-        max-height: 220px;
+        max-height: 300px;
     }
 }
 
@@ -1667,6 +1204,7 @@ p {
         transform: translateY(0);
     }
 }
+
 
 
 

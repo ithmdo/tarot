@@ -72,33 +72,33 @@ document.addEventListener('DOMContentLoaded', () => {
         // Make it float initially
         dailyCard.classList.add('floating');
 
+        // PRELOAD: Pick a random card on page load so the image downloads instantly
+        const cardKeys = Object.keys(tarotCardsData);
+        const randomKey = cardKeys[Math.floor(Math.random() * cardKeys.length)];
+        const cardData = tarotCardsData[randomKey];
+        
+        // Set the image IMMEDIATELY (it will be hidden on the back of the card)
+        dailyCardImg.src = `cards/.jpg`;
+
         dailyCard.addEventListener('click', () => {
             if (hasDrawnCard) return; // Prevent multiple draws
             hasDrawnCard = true;
             
             dailyCard.classList.remove('floating');
 
-            // 1. Pick a random card (1 to 20)
-            const cardKeys = Object.keys(tarotCardsData);
-            const randomKey = cardKeys[Math.floor(Math.random() * cardKeys.length)];
-            const cardData = tarotCardsData[randomKey];
-
-            // 2. Set the image BEFORE flipping so it has time to load
-            dailyCardImg.src = `cards/${randomKey}.jpg`;
-
-            // 3. Trigger Flip Animation
+            // Trigger Flip Animation
             dailyCard.classList.add('flipped');
 
-            // 4. Wait for flip to complete (1.2s), then reveal text
+            // Wait for flip to complete (1.2s), then reveal text
             setTimeout(() => {
                 if (dailyReadingTitle) dailyReadingTitle.textContent = cardData.name;
-                dailyReadingText.innerHTML = cardData.text;
+                if (dailyReadingText) dailyReadingText.innerHTML = cardData.text;
                 dailyReadingContainer.classList.add('visible');
 
-                // Optional: Scroll slightly to make sure text is in view
+                // Scroll down slightly if needed
                 const rect = dailyReadingContainer.getBoundingClientRect();
                 if (rect.bottom > window.innerHeight) {
-                    window.scrollBy({ top: rect.bottom - window.innerHeight + 50, behavior: 'smooth' });
+                    window.scrollBy({ top: rect.bottom - window.innerHeight + 20, behavior: 'smooth' });
                 }
             }, 1200);
         });
@@ -587,5 +587,8 @@ document.addEventListener('DOMContentLoaded', () => {
         animate();
     }
 });
+
+
+
 
 
