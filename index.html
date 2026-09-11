@@ -19,7 +19,7 @@
     <div id="preloader" class="preloader">
         <div class="preloader-content">
             <span class="preloader-logo">Oracle room</span>
-            <p class="preloader-text">خذ نفساً عميقاً... أنت في المكان الصحيح</p>
+            <p class="preloader-text" id="dynamic-greeting">خذ نفساً عميقاً... أنت في المكان الصحيح</p>
         </div>
     </div>
 
@@ -128,19 +128,36 @@
                 </div>
 
                 <div class="hero-visual reveal-on-scroll fade-in delay-200">
-                    <div class="tarot-card-group">
-                        <div class="t-card card-left">
-                            <div class="card-inner"></div>
+                    <div class="daily-tarot-container">
+                        <div class="daily-tarot-header">
+                            <span class="sparkle-icon">✨</span>
+                            <p>اسحب رسالتك لهذا اليوم</p>
+                            <span class="sparkle-icon">✨</span>
                         </div>
-                        <div class="t-card card-center">
-                            <div class="card-inner">
-                                <div class="card-ornament"></div>
+                        
+                        <div class="tarot-3d-wrapper" id="daily-card-wrapper">
+                            <div class="tarot-card-3d" id="daily-card">
+                                <!-- Card Back (Face Down) -->
+                                <div class="card-face card-back">
+                                    <div class="card-back-design">
+                                        <div class="mystic-circle"></div>
+                                        <span>Oracle</span>
+                                    </div>
+                                    <div class="card-glare"></div>
+                                </div>
+                                
+                                <!-- Card Front (Revealed) -->
+                                <div class="card-face card-front">
+                                    <img src="" alt="Daily Card" id="daily-card-img">
+                                    <div class="card-glare"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="t-card card-right">
-                            <div class="card-inner"></div>
+
+                        <div class="daily-reading-container" id="daily-reading-container">
+                            <h3 id="daily-reading-title" class="reading-title"></h3>
+                            <p id="daily-reading-text"></p>
                         </div>
-                        <div class="glow-effect"></div>
                     </div>
                 </div>
             </div>
@@ -357,6 +374,7 @@
         <span class="audio-text" id="audio-text">تشغيل الصوت</span>
     </button>
 
+    <script src="js/cards-data.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

@@ -1,5 +1,110 @@
 document.addEventListener('DOMContentLoaded', () => {
     /* ==========================================================================
+       Smart Time-Aware Mystical Greeting (Feature 7)
+       ========================================================================== */
+    const greetings = {
+        dawn: [
+            "شروق شمس جديد.. وطاقة جديدة مستعدة لإرشادك اليوم.",
+            "في هدوء هذا الصباح.. هناك إجابة تنتظر أن تُكشف لك.",
+            "نور الفجر يزيح ظلام الشك.. خذ نفساً عميقاً واستعد.",
+            "بداية يومك تحمل معها رسائل خفية.. هل أنت مستعد لقراءتها؟",
+            "طاقة الصباح هي طاقة البدايات.. افتح قلبك لما سيأتيك الآن."
+        ],
+        day: [
+            "وسط صخب يومك.. حدسك قادك إلى هنا لسبب.",
+            "طاقة الشمس في أوجها.. وكل مسار غامض يمكن أن يُضاء الآن.",
+            "توقف للحظة في زحام يومك.. هناك رسالة حقيقية تحتاج لسماعها.",
+            "نور النهار يكشف ما خفي في الظلام.. دعنا نرى ما تخبئه أوراقك.",
+            "كل خطوة خطوتها اليوم قادتك لهذه اللحظة.. استمع لروحك."
+        ],
+        dusk: [
+            "مع غروب الشمس، تتضح الرؤى وتتصل الأرواح.",
+            "هدوء المساء يحمل لك طمأنينة وإجابات طال انتظارها.",
+            "بين النور والظلام.. تتجلى الحقائق وتنكشف الأسرار.",
+            "يومك يشارف على الانتهاء.. لكن رسالتك الحقيقية تبدأ هنا.",
+            "طاقة التاروت تزداد قوة في هذا الوقت.. هل أنت جاهز؟"
+        ],
+        midnight: [
+            "في عتمة هذا الليل وسكونه، الأرواح تتحدث بصوت أوضح.",
+            "أنت مستيقظ الآن لسبب.. هناك إجابة تبحث عنك في هذا الظلام.",
+            "طاقة القمر الليلة قوية جداً.. دعه يرشدك لما هو مخفي.",
+            "الأسرار لا تكشف نفسها إلا لمن يسهر بحثاً عنها...",
+            "في هذا الوقت المتأخر، حدسك في أعلى مراحله.. استمع إليه."
+        ]
+    };
+
+    function setSmartGreeting() {
+        const hour = new Date().getHours();
+        let period = 'day';
+
+        if (hour >= 4 && hour < 9) {
+            period = 'dawn';
+        } else if (hour >= 9 && hour < 17) {
+            period = 'day';
+        } else if (hour >= 17 && hour < 21) {
+            period = 'dusk';
+        } else {
+            period = 'midnight';
+        }
+
+        const messages = greetings[period];
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        
+        const greetingEl = document.getElementById('dynamic-greeting');
+        if (greetingEl) {
+            greetingEl.textContent = randomMessage;
+        }
+    }
+    setSmartGreeting();
+
+    
+    /* ==========================================================================
+       Daily Interactive Tarot Card (Feature 5)
+       ========================================================================== */
+    const dailyCard = document.getElementById('daily-card');
+    const dailyCardImg = document.getElementById('daily-card-img');
+    const dailyReadingContainer = document.getElementById('daily-reading-container');
+    const dailyReadingTitle = document.getElementById('daily-reading-title');
+    const dailyReadingText = document.getElementById('daily-reading-text');
+    let hasDrawnCard = false;
+
+    if (dailyCard && typeof tarotCardsData !== 'undefined') {
+        // Make it float initially
+        dailyCard.classList.add('floating');
+
+        dailyCard.addEventListener('click', () => {
+            if (hasDrawnCard) return; // Prevent multiple draws
+            hasDrawnCard = true;
+            
+            dailyCard.classList.remove('floating');
+
+            // 1. Pick a random card (1 to 20)
+            const cardKeys = Object.keys(tarotCardsData);
+            const randomKey = cardKeys[Math.floor(Math.random() * cardKeys.length)];
+            const cardData = tarotCardsData[randomKey];
+
+            // 2. Set the image BEFORE flipping so it has time to load
+            dailyCardImg.src = `cards/${randomKey}.jpg`;
+
+            // 3. Trigger Flip Animation
+            dailyCard.classList.add('flipped');
+
+            // 4. Wait for flip to complete (1.2s), then reveal text
+            setTimeout(() => {
+                if (dailyReadingTitle) dailyReadingTitle.textContent = cardData.name;
+                dailyReadingText.innerHTML = cardData.text;
+                dailyReadingContainer.classList.add('visible');
+
+                // Optional: Scroll slightly to make sure text is in view
+                const rect = dailyReadingContainer.getBoundingClientRect();
+                if (rect.bottom > window.innerHeight) {
+                    window.scrollBy({ top: rect.bottom - window.innerHeight + 50, behavior: 'smooth' });
+                }
+            }, 1200);
+        });
+    }
+
+    /* ==========================================================================
        Set Current Year
        ========================================================================== */
     const yearSpan = document.getElementById('year');
@@ -153,95 +258,54 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================================================
-       3. Gyroscope / Device Orientation Tilt Effect
+       3. Universal Touch & Mouse 3D Tilt Effect
        ========================================================================== */
-    const gyroCards = document.querySelectorAll('[data-gyro]');
+    const tiltCards = document.querySelectorAll('[data-gyro]');
 
-    if (gyroCards.length > 0 && !prefersReducedMotion) {
-        // Check if device has gyroscope (mobile)
-        if (window.DeviceOrientationEvent) {
-            // Request permission on iOS 13+
-            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-                // iOS 13+ requires user gesture to enable
-                document.addEventListener('touchstart', function requestGyro() {
-                    DeviceOrientationEvent.requestPermission()
-                        .then(response => {
-                            if (response === 'granted') {
-                                enableGyroscope();
-                            }
-                        })
-                        .catch(console.error);
-                    document.removeEventListener('touchstart', requestGyro);
-                }, { once: true });
-            } else {
-                // Android or older iOS
-                enableGyroscope();
-            }
-        }
+    if (tiltCards.length > 0 && !prefersReducedMotion) {
+        tiltCards.forEach(card => {
+            const handleMove = (e) => {
+                let clientX = e.clientX;
+                let clientY = e.clientY;
 
-        // Fallback: Desktop mouse tilt on hover
-        gyroCards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
+                if (e.type === 'touchmove' || e.type === 'touchstart') {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                }
+
                 const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
+                const x = clientX - rect.left;
+                const y = clientY - rect.top;
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
 
-                const rotateX = ((y - centerY) / centerY) * -6; // max 6deg
-                const rotateY = ((x - centerX) / centerX) * 6;
+                const rotateX = ((y - centerY) / centerY) * -10; // max 10deg
+                const rotateY = ((x - centerX) / centerX) * 10;
 
                 // Move the glare
                 const glareAngle = Math.atan2(y - centerY, x - centerX) * (180 / Math.PI) + 90;
 
-                card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
                 card.classList.add('gyro-active');
 
                 if (card.style) {
                     card.style.setProperty('--glare-angle', `${glareAngle}deg`);
                 }
-            });
+            };
 
-            card.addEventListener('mouseleave', () => {
+            const handleLeave = () => {
                 card.style.transform = '';
                 card.classList.remove('gyro-active');
-            });
-        });
-    }
+            };
 
-    function enableGyroscope() {
-        let ticking = false;
-
-        window.addEventListener('deviceorientation', (e) => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    const beta = e.beta;   // -180 to 180 (front-back tilt)
-                    const gamma = e.gamma; // -90 to 90 (left-right tilt)
-
-                    if (beta === null || gamma === null) return;
-
-                    // Clamp values for subtle effect
-                    const tiltX = Math.max(-8, Math.min(8, gamma * 0.3));
-                    const tiltY = Math.max(-8, Math.min(8, (beta - 45) * 0.3)); // offset by 45 (phone held at angle)
-
-                    gyroCards.forEach(card => {
-                        // Only tilt cards that are in viewport
-                        const rect = card.getBoundingClientRect();
-                        const inView = rect.top < window.innerHeight && rect.bottom > 0;
-
-                        if (inView) {
-                            card.style.transform = `perspective(800px) rotateX(${tiltY}deg) rotateY(${tiltX}deg)`;
-                            card.classList.add('gyro-active');
-                        } else {
-                            card.style.transform = '';
-                            card.classList.remove('gyro-active');
-                        }
-                    });
-
-                    ticking = false;
-                });
-                ticking = true;
-            }
+            // Desktop events
+            card.addEventListener('mousemove', handleMove);
+            card.addEventListener('mouseleave', handleLeave);
+            
+            // Mobile events (Touch)
+            card.addEventListener('touchmove', handleMove, { passive: true });
+            card.addEventListener('touchstart', handleMove, { passive: true });
+            card.addEventListener('touchend', handleLeave);
         });
     }
 
@@ -523,3 +587,5 @@ document.addEventListener('DOMContentLoaded', () => {
         animate();
     }
 });
+
+
