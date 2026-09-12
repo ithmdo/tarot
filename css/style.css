@@ -353,10 +353,43 @@ body {
     100% { transform: translateY(0px) rotateZ(1deg); }
 }
 
+@keyframes mysticalDraw {
+    0% {
+        transform: translateY(0) scale(1) rotateZ(0deg);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    }
+    40% {
+        transform: translateY(-15px) scale(1.05) rotateZ(2deg);
+        box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
+    }
+    80% {
+        transform: translateY(-25px) scale(1.1) rotateZ(-1deg);
+        box-shadow: 0 0 80px rgba(212, 175, 55, 0.8), 0 0 120px rgba(91, 33, 182, 0.8);
+    }
+    100% {
+        transform: translateY(-30px) scale(1.15) rotateZ(0deg);
+        box-shadow: 0 0 100px rgba(212, 175, 55, 1), 0 0 150px rgba(255, 255, 255, 0.6);
+    }
+}
+
+.tarot-card-3d.drawing {
+    animation: mysticalDraw 1.5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards !important;
+}
+
+@keyframes flashReveal {
+    0% {
+        filter: brightness(2) contrast(1.2);
+        box-shadow: 0 0 150px rgba(255, 255, 255, 1), 0 0 50px rgba(212, 175, 55, 1);
+    }
+    100% {
+        filter: brightness(1) contrast(1);
+        box-shadow: 0 20px 50px rgba(212, 175, 55, 0.2);
+    }
+}
+
 .tarot-card-3d.flipped {
     transform: rotateY(180deg) scale(1.05);
-    animation: none;
-    box-shadow: 0 20px 50px rgba(212, 175, 55, 0.2);
+    animation: flashReveal 1.2s ease-out forwards;
 }
 
 .card-face {

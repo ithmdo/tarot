@@ -59,22 +59,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     
     /* ==========================================================================
-       Daily Interactive Tarot Card (Feature 5)
+       Daily Tarot Card Feature
        ========================================================================== */
     const dailyCard = document.getElementById('daily-card');
-    const dailyCardImg = document.getElementById('daily-card-img');
     const dailyReadingContainer = document.getElementById('daily-reading-container');
     const dailyReadingTitle = document.getElementById('daily-reading-title');
     const dailyReadingText = document.getElementById('daily-reading-text');
+    const dailyCardImg = document.getElementById('daily-card-img');
     let hasDrawnCard = false;
 
     if (dailyCard && typeof tarotCardsData !== 'undefined') {
-        // Make it float initially
-        dailyCard.classList.add('floating');
+        const today = new Date().toLocaleDateString();
+        let savedDate = localStorage.getItem('tarotDrawDate');
+        let savedCard = localStorage.getItem('tarotDailyCard');
+        let randomKey;
 
-        // PRELOAD: Pick a random card on page load so the image downloads instantly
-        const cardKeys = Object.keys(tarotCardsData);
-        const randomKey = cardKeys[Math.floor(Math.random() * cardKeys.length)];
+        if (savedDate === today && savedCard) {
+            randomKey = parseInt(savedCard);
+        } else {
+            randomKey = Math.floor(Math.random() * 20) + 1;
+            localStorage.setItem('tarotDrawDate', today);
+            localStorage.setItem('tarotDailyCard', randomKey);
+        }
+
         const cardData = tarotCardsData[randomKey];
         
         // Set the image IMMEDIATELY (it will be hidden on the back of the card)
@@ -85,22 +92,28 @@ document.addEventListener('DOMContentLoaded', () => {
             hasDrawnCard = true;
             
             dailyCard.classList.remove('floating');
+            
+            // 1. Add "drawing" class for the suspenseful levitation and glow
+            dailyCard.classList.add('drawing');
 
-            // Trigger Flip Animation
-            dailyCard.classList.add('flipped');
-
-            // Wait for flip to complete (1.2s), then reveal text
+            // 2. Wait for 1.5 seconds, then trigger the flip and flash
             setTimeout(() => {
-                if (dailyReadingTitle) dailyReadingTitle.textContent = cardData.name;
-                if (dailyReadingText) dailyReadingText.innerHTML = cardData.text;
-                dailyReadingContainer.classList.add('visible');
+                dailyCard.classList.remove('drawing');
+                dailyCard.classList.add('flipped');
 
-                // Scroll down slightly if needed
-                const rect = dailyReadingContainer.getBoundingClientRect();
-                if (rect.bottom > window.innerHeight) {
-                    window.scrollBy({ top: rect.bottom - window.innerHeight + 20, behavior: 'smooth' });
-                }
-            }, 1200);
+                // 3. Wait for flip to complete (1.2s), then reveal text
+                setTimeout(() => {
+                    if (dailyReadingTitle) dailyReadingTitle.textContent = cardData.name;
+                    if (dailyReadingText) dailyReadingText.innerHTML = cardData.text;
+                    dailyReadingContainer.classList.add('visible');
+
+                    // Scroll down slightly if needed
+                    const rect = dailyReadingContainer.getBoundingClientRect();
+                    if (rect.bottom > window.innerHeight) {
+                        window.scrollBy({ top: rect.bottom - window.innerHeight + 20, behavior: 'smooth' });
+                    }
+                }, 1200);
+            }, 1500);
         });
     }
 
