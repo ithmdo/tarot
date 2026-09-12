@@ -894,7 +894,10 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 400px;
+    min-height: 400px;
+    height: auto;
+    margin-top: 4rem;
+    margin-bottom: 2rem;
 }
 
 
@@ -1334,7 +1337,7 @@ p {
     .hero {
         min-height: auto;
         padding-top: calc(var(--nav-height) + 1rem);
-        padding-bottom: 2rem;
+        padding-bottom: 6rem;
     }
     .hero-container {
         gap: 2rem;
