@@ -337,6 +337,7 @@ body {
     width: 100%;
     height: 100%;
     position: relative;
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     transition: transform 1.2s cubic-bezier(0.4, 0.0, 0.2, 1);
     box-shadow: 0 20px 40px rgba(0,0,0,0.6);
@@ -378,11 +379,11 @@ body {
 
 @keyframes flashReveal {
     0% {
-        filter: brightness(2) contrast(1.2);
+        /* filter removed to prevent 3D flattening */
         box-shadow: 0 0 150px rgba(255, 255, 255, 1), 0 0 50px rgba(212, 175, 55, 1);
     }
     100% {
-        filter: brightness(1) contrast(1);
+        
         box-shadow: 0 20px 50px rgba(212, 175, 55, 0.2);
     }
 }
@@ -396,6 +397,7 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
+    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     border-radius: 18px;
     overflow: hidden;
@@ -404,6 +406,7 @@ body {
 }
 
 .card-back {
+    transform: rotateY(0deg) translateZ(-1px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -445,7 +448,7 @@ body {
 }
 
 .card-front {
-    transform: rotateY(180deg);
+    transform: rotateY(180deg) translateZ(1px);
     background: #000;
 }
 
@@ -1638,3 +1641,10 @@ p {
 
 
 
+
+/* Ultimate fallback for 3D flip */
+.tarot-card-3d.flipped .card-back {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
