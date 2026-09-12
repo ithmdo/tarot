@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cardData = tarotCardsData[randomKey];
         
         // Set the image IMMEDIATELY (it will be hidden on the back of the card)
-        dailyCardImg.src = `cards/.jpg`;
+        dailyCardImg.src = 'cards/' + randomKey + '.jpg';
 
         dailyCard.addEventListener('click', () => {
             if (hasDrawnCard) return; // Prevent multiple draws

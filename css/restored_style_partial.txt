@@ -1,0 +1,38 @@
+Created At: 2026-09-09T14:56:15+03:00
+Completed At: 2026-09-09T14:56:16+03:00
+File Path: `file:///C:/Users/dell/Desktop/tarot/css/style.css`
+Total Lines: 1232
+Total Bytes: 26871
+Showing lines 1 to 30
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1: /* ==========================================================================
+2:    CSS Variables & Reset
+3:    ========================================================================== */
+4:    :root {
+5:     /* Colors */
+6:     --bg-main: #06050a;
+7:     --bg-secondary: #0d0a14;
+8:     --bg-card: rgba(20, 15, 30, 0.6);
+9:     --bg-card-hover: rgba(30, 22, 45, 0.8);
+10:     
+11:     --text-primary: #f4f0e6;
+12:     --text-secondary: #a39b8b;
+13:     
+14:     --gold-primary: #d4af37;
+15:     --gold-light: #f3e5ab;
+16:     --gold-dark: #aa8c2c;
+17:     
+18:     --accent-violet: #2a164d;
+19:     --accent-indigo: #111536;
+20:     
+21:     --border-color: rgba(212, 175, 55, 0.15);
+22:     --border-highlight: rgba(212, 175, 55, 0.4);
+23: 
+24:     /* Typography */
+25:     --font-heading: 'Cairo', sans-serif;
+26:     --font-body: 'Tajawal', sans-serif;
+27:     --font-brand: 'Playfair Display', serif;
+28: 
+29:     /* Spacing & Sizes */
+30:     --nav-height: 80px;
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.
