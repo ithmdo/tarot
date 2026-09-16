@@ -75,9 +75,9 @@
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-container container">
-            <a href="#" class="brand-logo">Oracle room</a>
+            <a href="#" class="brand-logo" style="text-decoration: none;">Oracle room</a>
             <div class="moon-phase" id="moon-phase">
-                <svg class="moon-svg" viewBox="0 0 32 32" width="24" height="24"><circle id="moon-bg" cx="16" cy="16" r="14" fill="#f4f0e6"/><path id="moon-shadow" d="" fill="#06050a"/></svg>
+                <svg class="moon-svg" viewBox="0 0 32 32" width="24" height="24"><circle id="moon-bg" cx="16" cy="16" r="14" fill="#06050a"/><path id="moon-shadow" d="" fill="#f4f0e6"/></svg>
                 <span class="moon-label" id="moon-label"></span>
                 <div class="moon-dropdown" id="moon-dropdown">
                     <h4>طاقة القمر اليوم</h4>
@@ -85,7 +85,7 @@
                 </div>
             </div>
             
-            <ul class="nav-links">
+            <ul class="nav-links" style="list-style: none;">
                 <li><a href="#home" class="nav-link">الرئيسية</a></li>
                 <li><a href="#philosophy" class="nav-link">فلسفتنا</a></li>
                 <li><a href="#services" class="nav-link">القراءات</a></li>
@@ -246,6 +246,43 @@
                                 <button class="btn btn-outline" id="quiz-reset">إعادة السؤال</button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Crystal Ball Section -->
+        <section id="crystal-ball" class="crystal-ball-section section-padding">
+            <div class="container reveal-on-scroll fade-up">
+                <div class="section-header text-center">
+                    <span class="subtitle">استبصار سريع</span>
+                    <h2 class="section-title">كرة الأوراكل السحرية</h2>
+                    <p class="section-subtitle">ركّز على سؤال إجابته "نعم" أو "لا"، واكتبه بوضوح، ثم اسأل الكرة.</p>
+                </div>
+                
+                <div class="crystal-ball-container">
+                    <div class="crystal-ball-wrapper">
+                        <!-- Glow and Aura -->
+                        <div class="cb-aura"></div>
+                        
+                        <!-- The Ball -->
+                        <div class="crystal-ball" id="the-crystal-ball">
+                            <div class="cb-glare"></div>
+                            <div class="cb-smoke" id="cb-smoke"></div>
+                            <div class="cb-stars"></div>
+                            <div class="cb-inner-text" id="cb-answer">اسألني</div>
+                        </div>
+                        
+                        <!-- Base/Stand -->
+                        <div class="cb-stand">
+                            <div class="cb-stand-top"></div>
+                            <div class="cb-stand-bottom"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="cb-interaction">
+                        <input type="text" id="cb-question-input" class="glass-input" placeholder="اكتب سؤالك هنا (يحتمل نعم أو لا)..." autocomplete="off">
+                        <button id="cb-ask-btn" class="btn btn-primary cb-btn">اطلب الإجابة</button>
                     </div>
                 </div>
             </div>

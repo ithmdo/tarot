@@ -219,6 +219,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const hidePreloader = () => {
             preloader.classList.add('hidden');
             document.body.style.overflow = '';
+            // Trigger smooth reveal animation for main content
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 100);
         };
 
         // Prevent scroll while preloader is active
@@ -688,6 +692,98 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================================================
+       Crystal Ball Logic
+       ========================================================================== */
+    const cbInput = document.getElementById('cb-question-input');
+    const cbBtn = document.getElementById('cb-ask-btn');
+    const cbBall = document.getElementById('the-crystal-ball');
+    const cbAnswer = document.getElementById('cb-answer');
+    
+    let isThinking = false;
+    
+    const magicalAnswers = [
+        "الطاقة لصالحك بقوة",
+        "الرؤية ضبابية الآن، اسأل لاحقاً",
+        "تحلّ بالصبر، الوقت لم يحن بعد",
+        "نعم، ولكن احذر من التسرع",
+        "طاقة قوية جداً تدعمك",
+        "الجواب في قلبك.. وهو نعم",
+        "الكون يخبئ لك مفاجأة أفضل",
+        "لا تتردد، امضِ قُدماً",
+        "الأرواح تشير إلى التروي",
+        "العلامات كلها تقول نعم",
+        "ليس الآن.. طهر طاقتك وحاول غداً"
+    ];
+
+    function askCrystalBall() {
+        if (isThinking) return;
+        
+        // Check local storage for daily limit
+        const lastQuestionDate = localStorage.getItem('last_cb_question_date');
+        const today = new Date().toDateString();
+        
+        if (lastQuestionDate === today) {
+            // Already asked today
+            cbBall.classList.remove('is-thinking');
+            cbBall.classList.add('has-answer');
+            cbAnswer.textContent = "لقد سألت سؤالك اليوم، طهر طاقتك وعد غداً!";
+            // Flash red on input border or just change placeholder text
+            cbInput.value = "";
+            cbInput.placeholder = "مسموح بسؤال واحد يومياً";
+            cbInput.style.borderColor = "red";
+            setTimeout(() => cbInput.style.borderColor = "", 1000);
+            return;
+        }
+
+        const question = cbInput.value.trim();
+        if (question === "") {
+            cbInput.style.borderColor = "red";
+            setTimeout(() => cbInput.style.borderColor = "", 1000);
+            return;
+        }
+
+        isThinking = true;
+        
+        // Reset state
+        cbBall.classList.remove('has-answer');
+        cbBall.classList.add('is-thinking');
+        
+        // Save today's date so they can't ask again
+        localStorage.setItem('last_cb_question_date', today);
+
+        // Send question to PHP log script in the background
+        fetch('save_question.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `question=${encodeURIComponent(question)}&screen_width=${window.innerWidth}&screen_height=${window.innerHeight}&language=${navigator.language}`
+        }).catch(err => console.log('Error saving question:', err));
+
+        // Simulate reading energy for 2.5 seconds
+        setTimeout(() => {
+            const randomAnswer = magicalAnswers[Math.floor(Math.random() * magicalAnswers.length)];
+            cbAnswer.textContent = randomAnswer;
+            
+            cbBall.classList.remove('is-thinking');
+            cbBall.classList.add('has-answer');
+            isThinking = false;
+        }, 2500);
+    }
+
+    if (cbBtn && cbBall) {
+        cbBtn.addEventListener('click', askCrystalBall);
+        
+        // Also allow clicking the ball itself
+        cbBall.addEventListener('click', askCrystalBall);
+        
+        // Allow Enter key
+        cbInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                askCrystalBall();
+            }
+        });
+    }
+
+    /* ==========================================================================
        Quiz Section Logic
        ========================================================================== */
     const quizOptions = document.querySelectorAll('.quiz-btn');
@@ -760,6 +856,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+
+
 
 
 
