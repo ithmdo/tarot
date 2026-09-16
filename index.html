@@ -76,9 +76,13 @@
     <nav class="navbar" id="navbar">
         <div class="nav-container container">
             <a href="#" class="brand-logo">Oracle room</a>
-            <div class="moon-phase" id="moon-phase" title="طور القمر الليلة">
+            <div class="moon-phase" id="moon-phase">
                 <svg class="moon-svg" viewBox="0 0 32 32" width="24" height="24"><circle id="moon-bg" cx="16" cy="16" r="14" fill="#f4f0e6"/><path id="moon-shadow" d="" fill="#06050a"/></svg>
                 <span class="moon-label" id="moon-label"></span>
+                <div class="moon-dropdown" id="moon-dropdown">
+                    <h4>طاقة القمر اليوم</h4>
+                    <p id="moon-meaning">جاري حساب طاقة القمر...</p>
+                </div>
             </div>
             
             <ul class="nav-links">
@@ -144,23 +148,8 @@
                             <span class="sparkle-icon">✨</span>
                         </div>
                         
-                        <div class="tarot-3d-wrapper" id="daily-card-wrapper">
-                            <div class="tarot-card-3d" id="daily-card">
-                                <!-- Card Back (Face Down) -->
-                                <div class="card-face card-back">
-                                    <div class="card-back-design">
-                                        <div class="mystic-circle"></div>
-                                        <span>Oracle</span>
-                                    </div>
-                                    <div class="card-glare"></div>
-                                </div>
-                                
-                                <!-- Card Front (Revealed) -->
-                                <div class="card-face card-front">
-                                    <img src="" alt="بطاقة تاروت مجانية يومية - رسالة اليوم" id="daily-card-img">
-                                    <div class="card-glare"></div>
-                                </div>
-                            </div>
+                        <div class="deck-fan-wrapper" id="daily-card-wrapper">
+                            <!-- Cards injected by JS -->
                         </div>
 
                         <div class="daily-reading-container" id="daily-reading-container">
@@ -224,6 +213,39 @@
                         <p class="featured-note">يمكنك طرح أسئلة مخصصة أو الاعتماد على القراءة الشاملة للعلاقة.</p>
                         
                         <a href="https://www.instagram.com/it.tarot/" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-large mt-4">احجز هذه القراءة</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section id="quiz" class="quiz-section section-padding">
+            <div class="container reveal-on-scroll fade-up">
+                <div class="section-header text-center">
+                    <span class="subtitle">مستشار الأوراكل</span>
+                    <h2 class="section-title">محتار أي قراءة تختار؟</h2>
+                    <p class="section-subtitle">أجب عن هذا السؤال البسيط وسنرشدك للقراءة الأنسب لطاقتك الحالية.</p>
+                </div>
+                <div class="quiz-container">
+                    <div id="quiz-question-container">
+                        <h3 class="quiz-question">ما هو أكثر شيء يشغل تفكيرك حالياً؟</h3>
+                        <div class="quiz-options">
+                            <button class="btn btn-outline quiz-btn" data-result="عاطفية">شخص معين أو علاقة</button>
+                            <button class="btn btn-outline quiz-btn" data-result="شاملة">مستقبلي والخطوة القادمة</button>
+                            <button class="btn btn-outline quiz-btn" data-result="سؤال">موضوع محدد أنتظر فيه قراراً</button>
+                            <button class="btn btn-outline quiz-btn" data-result="شهرية">أريد أن أستعد للشهر القادم</button>
+                        </div>
+                    </div>
+                    <div id="quiz-result-container" class="hidden">
+                        <h3 class="quiz-result-title">القراءة الأنسب لك هي:</h3>
+                        <div class="quiz-result-card service-card" id="quiz-result-card">
+                            <h4 id="quiz-result-name" class="service-title"></h4>
+                            <p id="quiz-result-desc" class="service-desc"></p>
+                            <div class="quiz-result-actions" style="margin-top:1.5rem; display:flex; gap:1rem; flex-wrap:wrap;">
+                                <a href="#services" class="btn btn-primary">عرض التفاصيل</a>
+                                <button class="btn btn-outline" id="quiz-reset">إعادة السؤال</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -329,6 +351,54 @@
         </section>
 
 
+
+        <!-- FAQ Section -->
+        <section id="faq" class="faq-section section-padding">
+            <div class="container reveal-on-scroll fade-up">
+                <div class="section-header text-center">
+                    <h2 class="section-title">الأسئلة الشائعة</h2>
+                    <p class="section-subtitle">كل ما تحتاج لمعرفته قبل بدء قراءتك.</p>
+                </div>
+                <div class="faq-accordion">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>كيف أستلم نتيجة القراءة؟</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>يتم إرسال القراءة إليك رسالة مكتوبة مفصلة على حسابك في إنستغرام، لتتمكن من الاحتفاظ بها والرجوع إليها في أي وقت.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>هل أسماء ومعلومات الأشخاص سرية؟</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>بالتأكيد. خصوصيتك هي أولويتنا الأولى. جميع المعلومات والأسئلة ونتائج القراءة يتم الاحتفاظ بها بسرية تامة ولا تُشارك مع أي طرف آخر.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>متى تصلني القراءة بعد الحجز؟</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>عادة ما يتم إرسال القراءة خلال 2 إلى 4 ساعات كحد أقصى من تأكيد الحجز، حسب جدول المواعيد المتاح.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>هل يمكنني طرح سؤال إضافي بعد القراءة؟</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>نعم، بعد استلامك للقراءة الشاملة أو قراءة العلاقات، نسمح بسؤال استيضاحي واحد مجاني للتأكد من وضوح الصورة لديك بالكامل.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- CTA Section -->
         <section class="cta-section section-padding">

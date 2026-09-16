@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+
     /* ==========================================================================
        Smart Time-Aware Mystical Greeting (Feature 7)
        ========================================================================== */
@@ -61,14 +62,13 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ==========================================================================
        Daily Tarot Card Feature
        ========================================================================== */
-    const dailyCard = document.getElementById('daily-card');
+    const dailyCardWrapper = document.getElementById('daily-card-wrapper');
     const dailyReadingContainer = document.getElementById('daily-reading-container');
     const dailyReadingTitle = document.getElementById('daily-reading-title');
     const dailyReadingText = document.getElementById('daily-reading-text');
-    const dailyCardImg = document.getElementById('daily-card-img');
     let hasDrawnCard = false;
 
-    if (dailyCard && typeof tarotCardsData !== 'undefined') {
+    if (dailyCardWrapper && typeof tarotCardsData !== 'undefined') {
         const today = new Date().toLocaleDateString();
         let savedDate = localStorage.getItem('tarotDrawDate');
         let savedCard = localStorage.getItem('tarotDailyCard');
@@ -84,37 +84,89 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const cardData = tarotCardsData[randomKey];
         
-        // Set the image IMMEDIATELY (it will be hidden on the back of the card)
-        dailyCardImg.src = 'cards/' + randomKey + '.jpg';
+        // Generate 5 cards for the fan
+        for(let i=0; i<5; i++) {
+            const cardEl = document.createElement('div');
+            cardEl.className = 'fan-card tarot-card-3d';
+            cardEl.innerHTML = `
+                <div class="card-face card-back">
+                    <div class="card-back-design">
+                        <div class="mystic-circle"></div>
+                        <span>Oracle</span>
+                    </div>
+                    <div class="card-glare"></div>
+                </div>
+                <div class="card-face card-front">
+                    <img src="" alt="بطاقة تاروت مجانية يومية" class="daily-card-img">
+                    <div class="card-glare"></div>
+                </div>
+            `;
+            // Set rotation for the fan effect
+            const rotation = (i - 2) * 15; // -30, -15, 0, 15, 30
+            cardEl.style.transform = `rotateZ(${rotation}deg) translateY(${Math.abs(rotation)*2}px)`;
 
-        dailyCard.addEventListener('click', () => {
-            if (hasDrawnCard) return; // Prevent multiple draws
-            hasDrawnCard = true;
-            
-            dailyCard.classList.remove('floating');
-            
-            // 1. Add "drawing" class for the suspenseful levitation and glow
-            dailyCard.classList.add('drawing');
-
-            // 2. Wait for 1.5 seconds, then trigger the flip and flash
-            setTimeout(() => {
-                dailyCard.classList.remove('drawing');
-                dailyCard.classList.add('flipped');
-
-                // 3. Wait for flip to complete (1.2s), then reveal text
-                setTimeout(() => {
-                    if (dailyReadingTitle) dailyReadingTitle.textContent = cardData.name;
-                    if (dailyReadingText) dailyReadingText.innerHTML = cardData.text;
-                    dailyReadingContainer.classList.add('visible');
-
-                    // Scroll down slightly if needed
-                    const rect = dailyReadingContainer.getBoundingClientRect();
-                    if (rect.bottom > window.innerHeight) {
-                        window.scrollBy({ top: rect.bottom - window.innerHeight + 20, behavior: 'smooth' });
+            cardEl.addEventListener('click', function() {
+                if (hasDrawnCard) return;
+                hasDrawnCard = true;
+                
+                // Smoothly hide other cards
+                document.querySelectorAll('.fan-card').forEach(c => {
+                    if(c !== this) {
+                        c.classList.add('discarded');
                     }
-                }, 1200);
-            }, 1500);
-        });
+                });
+                
+                // Set front image
+                this.querySelector('.daily-card-img').src = 'cards/' + randomKey + '.jpg';
+                
+                this.classList.add('drawn');
+                
+                setTimeout(() => {
+                    this.classList.add('flipped');
+                    
+                    setTimeout(() => {
+                        if (dailyReadingTitle) dailyReadingTitle.textContent = cardData.name;
+                        dailyReadingContainer.classList.add('visible');
+
+                        const rect = dailyReadingContainer.getBoundingClientRect();
+                        if (rect.bottom > window.innerHeight) {
+                            window.scrollBy({ top: rect.bottom - window.innerHeight + 20, behavior: 'smooth' });
+                        }
+
+                        // Typewriter effect for reading text
+                        if (dailyReadingText) {
+                            dailyReadingText.innerHTML = ''; // Clear initially
+                            
+                            let i = 0;
+                            let isTag = false;
+                            let currentHTML = '';
+                            const htmlString = cardData.text;
+                            
+                            function typeWriter() {
+                                if (i < htmlString.length) {
+                                    let char = htmlString.charAt(i);
+                                    currentHTML += char;
+                                    
+                                    if (char === '<') isTag = true;
+                                    if (char === '>') isTag = false;
+                                    
+                                    dailyReadingText.innerHTML = currentHTML;
+                                    i++;
+                                    
+                                    if (isTag) {
+                                        typeWriter(); // Skip delays for HTML tags
+                                    } else {
+                                        setTimeout(typeWriter, 15); // Fast typing speed
+                                    }
+                                }
+                            }
+                            typeWriter();
+                        }
+                    }, 1200);
+                }, 1500);
+            });
+            dailyCardWrapper.appendChild(cardEl);
+        }
     }
 
     /* ==========================================================================
@@ -254,20 +306,38 @@ document.addEventListener('DOMContentLoaded', () => {
         shadow.setAttribute('d', d);
     }
 
+    function getMoonPhaseMeaning(phaseName) {
+        const meanings = {
+            'محاق': 'بداية جديدة، طاقة مثالية لتحديد النوايا والبدء بمشاريع جديدة.',
+            'هلال متزايد': 'طاقة نمو، ركز على بناء أهدافك ووضع خطط واضحة.',
+            'تربيع أول': 'وقت اتخاذ القرارات ومواجهة التحديات بقوة وإرادة.',
+            'أحدب متزايد': 'طاقة التعديل والتحسين، اقترب أكثر من أهدافك.',
+            'بدر': 'اكتمال ووضوح، طاقة قوية جداً لجني الثمار واكتشاف الحقائق.',
+            'أحدب متناقص': 'وقت للتأمل والمراجعة، تقبل ما حدث وابدأ بالتنظيف الطاقي.',
+            'تربيع أخير': 'طاقة التحرر والتخلص من ما لم يعد يخدمك.',
+            'هلال متناقص': 'فترة راحة واستشفاء قبل بداية دورة قمرية جديدة.'
+        };
+        return meanings[phaseName] || 'طاقة متجددة.';
+    }
+
     // Initialize Moon Phase
     const moonLabel = document.getElementById('moon-label');
+    const moonMeaning = document.getElementById('moon-meaning');
     const phase = calculateMoonPhase();
     const phaseName = getMoonPhaseName(phase);
 
     if (moonLabel) {
         moonLabel.textContent = phaseName;
     }
+    if (moonMeaning) {
+        moonMeaning.textContent = getMoonPhaseMeaning(phaseName);
+    }
     drawMoonSVG(phase);
 
     // Update tooltip
     const moonPhaseEl = document.getElementById('moon-phase');
     if (moonPhaseEl) {
-        moonPhaseEl.title = `طور القمر الليلة: ${phaseName}`;
+        moonPhaseEl.removeAttribute('title'); // Removed default title for custom dropdown
     }
 
     /* ==========================================================================
@@ -566,26 +636,43 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, { passive: true });
 
+        let isCanvasVisible = true;
+        
         function animate() {
-            ctx.clearRect(0, 0, width, height);
-            
-            // Draw ambient particles
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-            }
-            
-            // Draw touch burst particles
-            for (let i = touchParticles.length - 1; i >= 0; i--) {
-                touchParticles[i].update();
-                if (touchParticles[i].life <= 0) {
-                    touchParticles.splice(i, 1);
-                } else {
-                    touchParticles[i].draw();
+            if (isCanvasVisible) {
+                ctx.clearRect(0, 0, width, height);
+                
+                // Draw ambient particles
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                }
+                
+                // Draw touch burst particles
+                for (let i = touchParticles.length - 1; i >= 0; i--) {
+                    touchParticles[i].update();
+                    if (touchParticles[i].life <= 0) {
+                        touchParticles.splice(i, 1);
+                    } else {
+                        touchParticles[i].draw();
+                    }
                 }
             }
             
             requestAnimationFrame(animate);
+        }
+
+        // Performance Optimization: Pause canvas when out of view
+        const canvasObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                isCanvasVisible = entry.isIntersecting;
+            });
+        }, { threshold: 0 });
+        
+        // Observe the main container or body, but since canvas is fixed, we observe a hero section
+        const heroSection = document.getElementById('home');
+        if (heroSection) {
+            canvasObserver.observe(heroSection);
         }
 
         window.addEventListener('resize', () => {
@@ -599,6 +686,79 @@ document.addEventListener('DOMContentLoaded', () => {
         initParticles();
         animate();
     }
+
+    /* ==========================================================================
+       Quiz Section Logic
+       ========================================================================== */
+    const quizOptions = document.querySelectorAll('.quiz-btn');
+    const quizQuestionContainer = document.getElementById('quiz-question-container');
+    const quizResultContainer = document.getElementById('quiz-result-container');
+    const quizResultName = document.getElementById('quiz-result-name');
+    const quizResultDesc = document.getElementById('quiz-result-desc');
+    const quizReset = document.getElementById('quiz-reset');
+
+    const quizResultsMap = {
+        'عاطفية': {
+            name: 'قراءة تاروت عاطفية',
+            desc: 'بما أن تفكيرك مشغول بشخص معين أو علاقة، فهذه القراءة هي الأنسب لك لكشف النوايا ومسار العلاقة المستقبلي.'
+        },
+        'شاملة': {
+            name: 'قراءة تاروت شاملة',
+            desc: 'لأنك تبحث عن الخطوة القادمة ونظرة لمستقبلك، القراءة الشاملة ستعطيك إجابات في الجوانب العاطفية، العملية والمادية.'
+        },
+        'سؤال': {
+            name: 'قراءة لسؤال واحد أو 3 أسئلة',
+            desc: 'إذا كان لديك موضوع محدد وتنتظر قراراً بشأنه، فإن قراءة الأسئلة المحددة ستعطيك إجابة مباشرة وواضحة.'
+        },
+        'شهرية': {
+            name: 'قراءة تاروت شهرية',
+            desc: 'هذه القراءة ممتازة لتجهيز نفسك للطاقات والفرص التي يحملها الشهر القادم لك في مختلف الجوانب.'
+        }
+    };
+
+    quizOptions.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const resultKey = e.target.getAttribute('data-result');
+            const resultData = quizResultsMap[resultKey];
+            
+            quizQuestionContainer.classList.add('hidden');
+            quizResultContainer.classList.remove('hidden');
+            
+            quizResultName.textContent = resultData.name;
+            quizResultDesc.textContent = resultData.desc;
+        });
+    });
+
+    if(quizReset) {
+        quizReset.addEventListener('click', () => {
+            quizResultContainer.classList.add('hidden');
+            quizQuestionContainer.classList.remove('hidden');
+        });
+    }
+
+    /* ==========================================================================
+       FAQ Accordion Logic
+       ========================================================================== */
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    
+    faqQuestions.forEach(question => {
+        question.addEventListener('click', () => {
+            const isActive = question.classList.contains('active');
+            
+            // Close all
+            faqQuestions.forEach(q => {
+                q.classList.remove('active');
+                q.nextElementSibling.style.maxHeight = null;
+            });
+            
+            // If it wasn't active, open it
+            if (!isActive) {
+                question.classList.add('active');
+                const answer = question.nextElementSibling;
+                answer.style.maxHeight = answer.scrollHeight + "px";
+            }
+        });
+    });
 });
 
 
