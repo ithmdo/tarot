@@ -791,7 +791,7 @@ p {
 }
 
 .nav-actions {
-    display: flex;
+    display: none;
     align-items: center;
     gap: 1.5rem;
 }
@@ -1645,6 +1645,13 @@ p {
 
 /* Mobile (up to 767px) */
 @media screen and (max-width: 767px) {
+    .brand-logo {
+        font-size: 1.3rem !important;
+    }
+    .moon-svg {
+        width: 20px;
+        height: 20px;
+    }
     .hero {
         min-height: auto;
         padding-top: calc(var(--nav-height) + 1rem);
