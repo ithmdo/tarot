@@ -123,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 setTimeout(() => {
                     this.classList.add('flipped');
+                    playMysticChime('card');
                     
                     setTimeout(() => {
                         if (dailyReadingTitle) dailyReadingTitle.textContent = cardData.name;
@@ -178,7 +179,89 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================================================
-       Background Audio Controller
+       Web Audio API - Ethereal Harmonic Chimes
+       ========================================================================== */
+    let audioCtx = null;
+
+    function getAudioContext() {
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) {
+                audioCtx = new AudioContext();
+            }
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        return audioCtx;
+    }
+
+    function playMysticChime(type = 'card') {
+        try {
+            const ctx = getAudioContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+
+            if (type === 'card') {
+                // Sparkling ascending celestial chord (528Hz, 660Hz, 792Hz, 1056Hz)
+                const freqs = [528, 660, 792, 1056];
+                freqs.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+
+                    gain.gain.setValueAtTime(0, now + idx * 0.08);
+                    gain.gain.linearRampToValueAtTime(0.08, now + idx * 0.08 + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 1.2);
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+
+                    osc.start(now + idx * 0.08);
+                    osc.stop(now + idx * 0.08 + 1.3);
+                });
+            } else if (type === 'ball') {
+                // Deep resonant cosmic chime
+                const freqs = [432, 576, 864];
+                freqs.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = idx === 0 ? 'sine' : 'triangle';
+                    osc.frequency.setValueAtTime(freq, now);
+
+                    gain.gain.setValueAtTime(0.1 / (idx + 1), now);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+
+                    osc.start(now);
+                    osc.stop(now + 2.0);
+                });
+            } else if (type === 'tick') {
+                // Subtle tactile tick feedback
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(740, now);
+
+                gain.gain.setValueAtTime(0.04, now);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.08);
+            }
+        } catch (e) {
+            // AudioContext not permitted or supported, fail gracefully
+        }
+    }
+
+    /* ==========================================================================
+       Background Audio Controller (Desktop & Mobile Dock Synchronized)
        ========================================================================== */
     const audio = document.getElementById('bg-audio');
     const audioBtn = document.getElementById('audio-toggle');
@@ -186,25 +269,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const iconPlay = document.getElementById('icon-play');
     const iconPause = document.getElementById('icon-pause');
 
-    if (audio && audioBtn) {
-        audio.volume = 0.4; // Set a relaxing default volume
-        
-        audioBtn.addEventListener('click', () => {
-            if (audio.paused) {
-                audio.play().then(() => {
-                    audioBtn.classList.add('playing');
-                    audioText.textContent = 'إطفاء الصوت';
-                    iconPlay.style.display = 'none';
-                    iconPause.style.display = 'block';
-                }).catch(err => console.log('Audio play failed:', err));
-            } else {
-                audio.pause();
-                audioBtn.classList.remove('playing');
-                audioText.textContent = 'تشغيل الصوت';
-                iconPlay.style.display = 'block';
-                iconPause.style.display = 'none';
-            }
-        });
+    const dockAudioBtn = document.getElementById('dock-audio-btn');
+    const dockAudioLabel = document.getElementById('dock-audio-label');
+
+    function syncAudioUI(isPlaying) {
+        if (isPlaying) {
+            if (audioBtn) audioBtn.classList.add('playing');
+            if (audioText) audioText.textContent = 'إطفاء الصوت';
+            if (iconPlay) iconPlay.style.display = 'none';
+            if (iconPause) iconPause.style.display = 'block';
+
+            if (dockAudioBtn) dockAudioBtn.classList.add('playing');
+            if (dockAudioLabel) dockAudioLabel.textContent = 'موسيقى ✦';
+        } else {
+            if (audioBtn) audioBtn.classList.remove('playing');
+            if (audioText) audioText.textContent = 'تشغيل الصوت';
+            if (iconPlay) iconPlay.style.display = 'block';
+            if (iconPause) iconPause.style.display = 'none';
+
+            if (dockAudioBtn) dockAudioBtn.classList.remove('playing');
+            if (dockAudioLabel) dockAudioLabel.textContent = 'الصوت';
+        }
+    }
+
+    function toggleBackgroundAudio() {
+        if (!audio) return;
+        getAudioContext();
+        if (audio.paused) {
+            audio.play().then(() => {
+                syncAudioUI(true);
+            }).catch(err => console.log('Audio play failed:', err));
+        } else {
+            audio.pause();
+            syncAudioUI(false);
+        }
+    }
+
+    if (audio) {
+        audio.volume = 0.4;
+        if (audioBtn) {
+            audioBtn.addEventListener('click', toggleBackgroundAudio);
+        }
+        if (dockAudioBtn) {
+            dockAudioBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                playMysticChime('tick');
+                toggleBackgroundAudio();
+            });
+        }
     }
 
     // Check if user prefers reduced motion
@@ -762,6 +874,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             const randomAnswer = magicalAnswers[Math.floor(Math.random() * magicalAnswers.length)];
             cbAnswer.textContent = randomAnswer;
+            playMysticChime('ball');
             
             cbBall.classList.remove('is-thinking');
             cbBall.classList.add('has-answer');
@@ -853,6 +966,67 @@ document.addEventListener('DOMContentLoaded', () => {
                 const answer = question.nextElementSibling;
                 answer.style.maxHeight = answer.scrollHeight + "px";
             }
+        });
+    });
+
+    /* ==========================================================================
+       Ambient Pointer Spotlight & Holographic Foil Reflection
+       ========================================================================== */
+    const spotlight = document.getElementById('ambient-spotlight');
+    let isSpotlightActive = false;
+
+    function updateSpotlight(e) {
+        const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : null);
+        const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : null);
+        
+        if (clientX === null || clientY === null) return;
+        
+        if (spotlight) {
+            if (!isSpotlightActive) {
+                spotlight.classList.add('active');
+                isSpotlightActive = true;
+            }
+            spotlight.style.left = clientX + 'px';
+            spotlight.style.top = clientY + 'px';
+        }
+    }
+
+    window.addEventListener('mousemove', updateSpotlight, { passive: true });
+    window.addEventListener('touchmove', updateSpotlight, { passive: true });
+
+    // Holographic Foil & 3D Tilt for Interactive Cards
+    const interactiveCards = document.querySelectorAll('.service-card, .rule-card, .quiz-container, .cta-box');
+    interactiveCards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+
+            if (card.hasAttribute('data-gyro') && window.innerWidth >= 1024) {
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -6;
+                const rotateY = ((x - centerX) / centerX) * 6;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+            }
+        });
+
+        card.addEventListener('mouseleave', () => {
+            if (card.hasAttribute('data-gyro')) {
+                card.style.transform = '';
+            }
+        });
+    });
+
+    // Mobile Dock Navigation Active State & Tactile Tick
+    const dockItems = document.querySelectorAll('.dock-item');
+    dockItems.forEach(item => {
+        item.addEventListener('click', () => {
+            playMysticChime('tick');
+            dockItems.forEach(d => d.classList.remove('active'));
+            item.classList.add('active');
         });
     });
 });

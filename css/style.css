@@ -2373,4 +2373,248 @@ p {
     margin: 0;
 }
 
+/* ==========================================================================
+   UI & UX Luxury Enhancements
+   ========================================================================== */
+
+/* 1. Global Custom Selection & Golden Scrollbar */
+::selection {
+    background: rgba(212, 175, 55, 0.35);
+    color: var(--gold-light);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #06050a;
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.5), rgba(212, 175, 55, 0.2));
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(212, 175, 55, 0.7);
+}
+
+.gold-gradient-text {
+    background: linear-gradient(135deg, #fff2cc 0%, #d4af37 50%, #aa8c2c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+/* 2. Mystic Cosmic Grain & Ambient Pointer Spotlight */
+.mystic-noise {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.038;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+}
+
+.ambient-spotlight {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 550px;
+    height: 550px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, rgba(138, 43, 226, 0.04) 40%, transparent 70%);
+    filter: blur(40px);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    will-change: left, top;
+}
+
+.ambient-spotlight.active {
+    opacity: 1;
+}
+
+/* 3. Dynamic Holographic Foil & Glare Lighting */
+.service-card, .rule-card, .faq-item, .quiz-container, .cta-box {
+    position: relative;
+    overflow: hidden;
+}
+
+.service-card::after, .rule-card::after, .quiz-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(212, 175, 55, 0.16) 0%, rgba(138, 43, 226, 0.08) 30%, transparent 65%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.service-card:hover::after, .rule-card:hover::after, .quiz-container:hover::after {
+    opacity: 1;
+}
+
+/* Tactile press response for buttons and cards */
+.btn, .quiz-btn, .service-card, .fan-card, .dock-item, .faq-question {
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s ease, background 0.3s ease;
+}
+
+.btn:active, .quiz-btn:active, .dock-item:active {
+    transform: scale(0.95) !important;
+}
+
+/* 4. Animated Audio Waveform Equalizer */
+.audio-waves {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 14px;
+    margin: 0 4px;
+}
+
+.wave-bar {
+    width: 2.5px;
+    height: 4px;
+    background-color: var(--gold-primary);
+    border-radius: 2px;
+    transition: height 0.3s ease;
+}
+
+.audio-toggle-btn.playing .wave-bar {
+    animation: waveBounce 1.2s ease-in-out infinite alternate;
+}
+
+.audio-toggle-btn.playing .wave-bar:nth-child(1) { animation-delay: 0.1s; height: 12px; }
+.audio-toggle-btn.playing .wave-bar:nth-child(2) { animation-delay: 0.35s; height: 14px; }
+.audio-toggle-btn.playing .wave-bar:nth-child(3) { animation-delay: 0.2s; height: 8px; }
+.audio-toggle-btn.playing .wave-bar:nth-child(4) { animation-delay: 0.45s; height: 13px; }
+
+@keyframes waveBounce {
+    0% { height: 3px; }
+    50% { height: 14px; }
+    100% { height: 6px; }
+}
+
+.dock-waves {
+    display: flex;
+    align-items: flex-end;
+    gap: 2.5px;
+    height: 14px;
+}
+
+.dock-wave-bar {
+    width: 2px;
+    height: 3px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: height 0.3s ease;
+}
+
+.dock-item.playing .dock-wave-bar {
+    animation: dockWave 1s ease-in-out infinite alternate;
+}
+.dock-item.playing .dock-wave-bar:nth-child(1) { animation-delay: 0.1s; }
+.dock-item.playing .dock-wave-bar:nth-child(2) { animation-delay: 0.3s; }
+.dock-item.playing .dock-wave-bar:nth-child(3) { animation-delay: 0.2s; }
+
+@keyframes dockWave {
+    0% { height: 3px; }
+    100% { height: 14px; }
+}
+
+/* 5. Floating Mystic Bottom Dock (Mobile Only) */
+.mystic-dock {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .mystic-dock {
+        position: fixed;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 32px);
+        max-width: 390px;
+        height: 64px;
+        background: rgba(14, 10, 24, 0.78);
+        backdrop-filter: blur(25px) saturate(200%);
+        -webkit-backdrop-filter: blur(25px) saturate(200%);
+        border: 1px solid rgba(212, 175, 55, 0.28);
+        border-top: 1px solid rgba(212, 175, 55, 0.45);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.75), 0 0 25px rgba(138, 43, 226, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        border-radius: 36px;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 0 8px;
+        box-sizing: border-box;
+    }
+
+    /* Hide standard floating audio button on mobile to prevent clutter */
+    .audio-toggle-btn {
+        display: none !important;
+    }
+
+    /* Add bottom padding to body so dock never overlaps footer content */
+    body {
+        padding-bottom: 84px;
+    }
+
+    .dock-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        text-decoration: none;
+        padding: 6px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        min-width: 58px;
+    }
+
+    .dock-item:hover, .dock-item:focus, .dock-item.active {
+        color: var(--gold-light);
+    }
+
+    .dock-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+    }
+
+    .dock-label {
+        font-family: var(--font-heading);
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0.2px;
+        white-space: nowrap;
+    }
+
+    .dock-highlight {
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(138, 43, 226, 0.35));
+        border: 1px solid rgba(212, 175, 55, 0.5);
+        color: var(--gold-primary);
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
+    }
+
+    .dock-highlight:hover, .dock-highlight:active {
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.4), rgba(138, 43, 226, 0.5));
+        color: #fff;
+    }
+}
+
 
